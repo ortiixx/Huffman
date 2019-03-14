@@ -1,4 +1,94 @@
 # -*- coding: utf-8 -*-
+"""
+
+"""
+
+
+
+#%%----------------------------------------------------
+
+'''
+Dada una distribucion de probabilidad, hallar un código de Huffman asociado
+'''
+import bisect
+def descifrar(nod,cod):
+    if isinstance(nod,str) == 1:
+        return [cod]
+
+    else :
+        nod1 = nod[1]
+        nod2 = nod[2]
+        cod1 = cod+"0"
+        cod2 = cod+"1"          
+        r1 = descifrar(nod1,cod1)
+        r2 = descifrar(nod2,cod2)
+        return r1+r2
+ 
+def Huffman(p):
+
+    ps = sorted(p)
+    dic = dict() #estructura mas compleha que una lista -> dict con nodos no asociados id prob segundo factor
+    for prob in p:
+        if prob in dic:
+            dic[prob].append("leaf")
+        else:
+            dic[prob]= ["leaf"]
+
+    while len(ps) > 1:
+        p1 = ps[0]
+        p2 = ps[1]
+        ps.pop(0)
+        ps.pop(0)
+        nod1 = dic[p1][0]
+        dic[p1].pop(0)
+        nod2 = dic[p2][0]
+        dic[p2].pop(0)
+        
+        if len(dic[p1])==0:
+            dic.pop(p1)
+
+        if p2 != p1 and len(dic[p2])==0:
+            dic.pop(p2)
+
+        prob = p1 + p2
+
+        if prob in dic:
+            dic[prob].append(("intern",nod1,nod2))
+        else:
+            dic[prob]= [("intern",nod1,nod2)]
+        bisect.insort_left(ps,prob)#bisect module
+
+    codigo = descifrar(dic[1][0],"")
+    return codigo
+
+
+#
+
+p=[0.5,0.1,0.2,0.1,0.05,0.05]
+
+print(Huffman(p))#=['1', '0101', '00', '011', '01000', '01001'] (¡NO ES ÚNICO!) lo importante es que dé longitud media igual sum(Pi*Li) 
+
+
+
+
+#%%----------------------------------------------------
+
+'''
+Dada la ddp p=[1/n,..../1/n] con n=2**8, hallar un código de Huffman asociado,
+la entropía de p y la longitud media de código de Huffman hallado.
+'''
+import math
+n=2**8
+p=[1/n for _ in range(n)]
+
+code=Huffman(p)
+entropia=-1*math.log(1/n)/math.log(2)#simplifcar entropia=-sum(pi*log(pi))=> como pi constante =>-pi*log(pi)*sum(1)=>-pi*log(pi)*n=>como pi=1/n =>-log(1/n)=>log(n) como n es 2^k siendo k =8 y el logaritmo que aplicamos es de base 2 asi queda entropia es K, 8 en este caso.Ergo se cumple H((fuente)<=lmediaHuffman<H(fuente)+1 sabemos que el resultado ha de ser un codigo huffman de 8 de longitud
+lmedia=sum([len(c)*1/n for c in code])#
+print("code: ",code,"\n entropia: ",entropia,"\n longitud media:",lmedia)
+
+
+
+#%%----------------------------------------------------
 
 '''
 Dado un mensaje hallar la tabla de frecuencia de los caracteres que lo componen

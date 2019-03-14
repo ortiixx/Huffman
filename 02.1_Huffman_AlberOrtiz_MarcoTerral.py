@@ -163,9 +163,15 @@ def EncodeHuffman(mensaje_a_codificar):
     return mensaje_codificado, m2c
 
     
-#def DecodeHuffman(mensaje_codificado,m2c):
-
-#    return mensaje_decodificado
+def DecodeHuffman(mensaje_codificado,m2c):
+    word = ""
+    mensaje_decodificado = ""
+    for c in mensaje_codificado:
+        word +=c
+        if word in m2c:
+            mensaje_decodificado += m2c[word]
+            word = ""
+    return mensaje_decodificado
     
 print(EncodeHuffman(mensaje))
 

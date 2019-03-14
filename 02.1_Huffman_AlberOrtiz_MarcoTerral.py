@@ -12,15 +12,14 @@ Dada una distribucion de probabilidad, hallar un código de Huffman asociado
 '''
 import bisect
 def descifrar(nod,cod):
-    print("arbol a descifrar",nod)
     if isinstance(nod,str) == 1:
         return [cod]
 
     else :
         nod1 = nod[1]
         nod2 = nod[2]
-        cod1 = cod.append("0")
-        cod2 = cod.append("1")          
+        cod1 = cod+"0"
+        cod2 = cod+"1"          
         r1 = descifrar(nod1,cod1)
         r2 = descifrar(nod2,cod2)
         return r1+r2
@@ -36,18 +35,13 @@ def Huffman(p):
             dic[prob]= ["leaf"]
 
     while len(ps) > 1:
-        print("estado dict:",dic)
-        print()
-        print("estado list",ps)
-        print()
-
         p1 = ps[0]
         p2 = ps[1]
         ps.pop(0)
         ps.pop(0)
         nod1 = dic[p1][0]
-        nod2 = dic[p2][0]
         dic[p1].pop(0)
+        nod2 = dic[p2][0]
         dic[p2].pop(0)
         
         if len(dic[p1])==0:
@@ -63,8 +57,8 @@ def Huffman(p):
         else:
             dic[prob]= [("intern",nod1,nod2)]
         bisect.insort_left(ps,prob)#bisect module
-    
-    codigo = descifrar(dic[1],"")
+
+    codigo = descifrar(dic[1][0],"")
     return codigo
 
 
@@ -72,7 +66,7 @@ def Huffman(p):
 
 p=[0.5,0.1,0.2,0.1,0.05,0.05]
 
-#print(Huffman(p))#=['1', '0101', '00', '011', '01000', '01001'] (¡NO ES ÚNICO!)
+print(Huffman(p))#=['1', '0101', '00', '011', '01000', '01001'] (¡NO ES ÚNICO!) lo importante es que dé longitud media igual sum(Pi*Li) 
 
 
 
@@ -83,12 +77,14 @@ p=[0.5,0.1,0.2,0.1,0.05,0.05]
 Dada la ddp p=[1/n,..../1/n] con n=2**8, hallar un código de Huffman asociado,
 la entropía de p y la longitud media de código de Huffman hallado.
 '''
-
+import math
 n=2**8
 p=[1/n for _ in range(n)]
 
-
-
+code=Huffman(p)
+entropia=-1*math.log(1/n)/math.log(2)#simplifcar entropia=-sum(pi*log(pi))=> como pi constante =>-pi*log(pi)*sum(1)=>-pi*log(pi)*n=>como pi=1/n =>-log(1/n)=>log(n) como n es 2^k siendo k =8 y el logaritmo que aplicamos es de base 2 asi queda entropia es K, 8 en este caso.Ergo se cumple H((fuente)<=lmediaHuffman<H(fuente)+1 sabemos que el resultado ha de ser un codigo huffman de 8 de longitud
+lmedia=sum([len(c)*1/n for c in code])#
+print("code: ",code,"\n entropia: ",entropia,"\n longitud media:",lmedia)
 
 
 
@@ -97,29 +93,15 @@ p=[1/n for _ in range(n)]
 '''
 Dado un mensaje hallar la tabla de frecuencia de los caracteres que lo componen
 '''
-
-def dic2list(dic):
-	l = []
-	for key, val in dic.items():
-		l.append([key,val])
-	return l
-
-
 def tablaFrecuencias(mensaje):
-    tabla = {}
-    for a in mensaje:
-        if(not a in tabla):
-            tabla[a] = 1
-        else:
-            tabla[a] += 1
-    return sorted(dic2list(tabla), key= lambda x: -x[1])
- 
-mensaje='La heroica ciudad dormía la siesta. El viento Sur, caliente y perezoso, empujaba las nubes blanquecinas que se rasgaban al correr hacia el Norte. En las calles no había más ruido que el rumor estridente de los remolinos de polvo, trapos, pajas y papeles que iban de arroyo en arroyo, de acera en acera, de esquina en esquina revolando y persiguiéndose, como mariposas que se buscan y huyen y que el aire envuelve en sus pliegues invisibles. Cual turbas de pilluelos, aquellas migajas de la basura, aquellas sobras de todo se juntaban en un montón, parábanse como dormidas un momento y brincaban de nuevo sobresaltadas, dispersándose, trepando unas por las paredes hasta los cristales temblorosos de los faroles, otras hasta los carteles de papel mal pegado a las esquinas, y había pluma que llegaba a un tercer piso, y arenilla que se incrustaba para días, o para años, en la vidriera de un escaparate, agarrada a un plomo. Vetusta, la muy noble y leal ciudad, corte en lejano siglo, hacía la digestión del cocido y de la olla podrida, y descansaba oyendo entre sueños el monótono y familiar zumbido de la campana de coro, que retumbaba allá en lo alto de la esbeltatorre en la Santa Basílica. La torre de la catedral, poema romántico de piedra,delicado himno, de dulces líneas de belleza muda y perenne, era obra del siglo diez y seis, aunque antes comenzada, de estilo gótico, pero, cabe decir, moderado por uninstinto de prudencia y armonía que modificaba las vulgares exageraciones de estaarquitectura. La vista no se fatigaba contemplando horas y horas aquel índice depiedra que señalaba al cielo; no era una de esas torres cuya aguja se quiebra desutil, más flacas que esbeltas, amaneradas, como señoritas cursis que aprietandemasiado el corsé; era maciza sin perder nada de su espiritual grandeza, y hasta sussegundos corredores, elegante balaustrada, subía como fuerte castillo, lanzándosedesde allí en pirámide de ángulo gracioso, inimitable en sus medidas y proporciones.Como haz de músculos y nervios la piedra enroscándose en la piedra trepaba a la altura, haciendo equilibrios de acróbata en el aire; y como prodigio de juegosmalabares, en una punta de caliza se mantenía, cual imantada, una bola grande debronce dorado, y encima otra más pequenya, y sobre ésta una cruz de hierro que acababaen pararrayos.'
-print(tablaFrecuencias(mensaje))   
+    
+    return frecuencias
+    
 
 """
 Ejemplo
 
+mensaje='La heroica ciudad dormía la siesta. El viento Sur, caliente y perezoso, empujaba las nubes blanquecinas que se rasgaban al correr hacia el Norte. En las calles no había más ruido que el rumor estridente de los remolinos de polvo, trapos, pajas y papeles que iban de arroyo en arroyo, de acera en acera, de esquina en esquina revolando y persiguiéndose, como mariposas que se buscan y huyen y que el aire envuelve en sus pliegues invisibles. Cual turbas de pilluelos, aquellas migajas de la basura, aquellas sobras de todo se juntaban en un montón, parábanse como dormidas un momento y brincaban de nuevo sobresaltadas, dispersándose, trepando unas por las paredes hasta los cristales temblorosos de los faroles, otras hasta los carteles de papel mal pegado a las esquinas, y había pluma que llegaba a un tercer piso, y arenilla que se incrustaba para días, o para años, en la vidriera de un escaparate, agarrada a un plomo. Vetusta, la muy noble y leal ciudad, corte en lejano siglo, hacía la digestión del cocido y de la olla podrida, y descansaba oyendo entre sueños el monótono y familiar zumbido de la campana de coro, que retumbaba allá en lo alto de la esbeltatorre en la Santa Basílica. La torre de la catedral, poema romántico de piedra,delicado himno, de dulces líneas de belleza muda y perenne, era obra del siglo diez y seis, aunque antes comenzada, de estilo gótico, pero, cabe decir, moderado por uninstinto de prudencia y armonía que modificaba las vulgares exageraciones de estaarquitectura. La vista no se fatigaba contemplando horas y horas aquel índice depiedra que señalaba al cielo; no era una de esas torres cuya aguja se quiebra desutil, más flacas que esbeltas, amaneradas, como señoritas cursis que aprietandemasiado el corsé; era maciza sin perder nada de su espiritual grandeza, y hasta sussegundos corredores, elegante balaustrada, subía como fuerte castillo, lanzándosedesde allí en pirámide de ángulo gracioso, inimitable en sus medidas y proporciones.Como haz de músculos y nervios la piedra enroscándose en la piedra trepaba a la altura, haciendo equilibrios de acróbata en el aire; y como prodigio de juegosmalabares, en una punta de caliza se mantenía, cual imantada, una bola grande debronce dorado, y encima otra más pequenya, y sobre ésta una cruz de hierro que acababaen pararrayos.'
 
 tablaFrecuencias(mensaje)=
 [[' ', 381], [',', 46], ['.', 8], [';', 3], ['B', 1], ['C', 2], ['E', 2], ['L', 3], ['N', 1], ['S', 2], ['V', 1], ['a', 267], ['b', 46], ['c', 64], ['d', 104], ['e', 238], ['f', 6], ['g', 23], ['h', 15], ['i', 98], ['j', 7], ['l', 112], ['m', 49], ['n', 111], ['o', 141], ['p', 48], ['q', 25], ['r', 126], ['s', 145], ['t', 68], ['u', 87], ['v', 11], ['x', 1], ['y', 30], ['z', 11], ['á', 11], ['é', 3], ['í', 12], ['ñ', 4], ['ó', 5], ['ú', 1]]
@@ -133,47 +115,16 @@ obtenido a partir de las frecuencias de los caracteres del mensaje.
 Definir otra función que decodifique los mensajes codificados con la función 
 anterior.
 '''
-from functools import reduce
-
-def freqs2ddp(freqs):
-    l = []
-    for elem in freqs:
-        l.append(elem[1])
-    s = reduce((lambda x, y: x+y), l)
-    ps = map(lambda x: x/s, l)
-    return ps
-
-def huffmanTable(freqs, code):
-    table = {}
-    i = 0
-    for a in freqs:
-        table[a] = code[i]
-        ++i
-    return table
 
 def EncodeHuffman(mensaje_a_codificar):
-    freqs = tablaFrecuencias(mensaje_a_codificar) #Already sorted
-    ddp = freqs2ddp(freqs) #we convert freqs into probabilities
-    code = Huffman(ddp)
-    m2c = huffmanTable(freqs, code)
-    mensaje_codificado = ""
-    for c in mensaje_a_codificar:
-        mensaje_codificado += m2c[c]
-    print(mensaje_codificado)
-    return mensaje_codificado, m2c
 
+    return mensaje_codificado, m2c
+    
     
 def DecodeHuffman(mensaje_codificado,m2c):
-    word = ""
-    mensaje_decodificado = ""
-    for c in mensaje_codificado:
-        word +=c
-        if word in m2c:
-            mensaje_decodificado += m2c[word]
-            word = ""
+
     return mensaje_decodificado
-    
-print(EncodeHuffman(mensaje))
+        
 
 """
 Ejemplo

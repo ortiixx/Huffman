@@ -137,14 +137,16 @@ def freqs2ddp(freqs):
         l.append(elem[1])
     s = reduce((lambda x, y: x+y), l)
     ps = map(lambda x: x/s, l)
-    return ps
+
+    return list(ps)
 
 def huffmanTable(freqs, code):
     table = {}
     i = 0
     for a in freqs:
-        table[a] = code[i]
-        ++i
+        table[a[0]] = code[i]
+        i += 1
+
     return table
 
 def EncodeHuffman(mensaje_a_codificar):
@@ -152,11 +154,13 @@ def EncodeHuffman(mensaje_a_codificar):
     ddp = freqs2ddp(freqs) #we convert freqs into probabilities
     code = Huffman(ddp)
     m2c = huffmanTable(freqs, code)
+    print(m2c)
     mensaje_codificado = ""
     for c in mensaje_a_codificar:
         mensaje_codificado += m2c[c]
     print(mensaje_codificado)
-    return mensaje_codificado, m2c
+
+    return mensaje_codificado, {v: k for k, v in m2c.items()}
 
     
 def DecodeHuffman(mensaje_codificado,m2c):
@@ -165,12 +169,14 @@ def DecodeHuffman(mensaje_codificado,m2c):
     for c in mensaje_codificado:
         word +=c
         if word in m2c:
+            print(m2c[word])
             mensaje_decodificado += m2c[word]
             word = ""
+
     return mensaje_decodificado
     
-print(EncodeHuffman(mensaje))
-
+msg, m2c = EncodeHuffman(mensaje)
+print(DecodeHuffman(msg, m2c))
 """
 Ejemplo
 

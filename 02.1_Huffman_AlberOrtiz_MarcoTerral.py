@@ -188,21 +188,13 @@ mensaje_codificado='101101111101010000001100110010111010100111110101001111110100
 """
 size_org = len(mensaje)*8
 size_comp = len(msg)
+size_dic = len(m2c)
+lcodmed=sum([len(y)*1/len(m2c) for c, y in m2c.items()])
+print("\n")
 print("Tamaño mensaje original: " + str(size_org))
 print("Tamaño mensaje codificado: " + str(size_comp))
 print("Ratio de compresión: " + str(size_org/size_comp))
+print("Ratio de compresión con dic: " + str(18552/(9825 + (8+lcodmed)*41)))
 #%%
-'''
-Si no tenemos en cuenta la memoria necesaria para almacenar el diccionario, 
-¿cuál es la ratio de compresión?
-
-R: 1.89
-R: 18552/(9825 + 8*alfabeto + 
-
-Si tenemos en cuenta la memoria necesaria para almacenar el diccionario, 
-haz una estimación de la ratio de compresión.
-
-'''
-
 
 
